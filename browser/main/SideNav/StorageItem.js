@@ -7,7 +7,10 @@ import CreateFolderModal from 'browser/main/modals/CreateFolderModal'
 import RenameFolderModal from 'browser/main/modals/RenameFolderModal'
 import dataApi from 'browser/main/lib/dataApi'
 import StorageItemChild from 'browser/components/StorageItem'
+import _ from 'lodash'
+import CSON from '@rokt33r/season'
 
+const path = require('path')
 const { remote } = require('electron')
 const { Menu, MenuItem, dialog } = remote
 
@@ -131,8 +134,39 @@ class StorageItem extends React.Component {
     }
   }
 
+  handleDragStart (e, folder) {
+    e.dataTransfer.setData('dragFolderKey', folder.key)
+  }
+
+  handleDrop (e, folder, storage, dispatch) {
+    const dragFolderKey = e.dataTransfer.getData('dragFolderKey')
+    this.changeOrderFolder(dragFolderKey, folder.key, storage.folders)
+    CSON.writeFileSync(path.join(storage.path, 'boostnote.json'), _.pick(storage, ['folders', 'version']))
+    dispatch({
+      type: 'UPDATE_FOLDER',
+      storage: storage
+    })
+  }
+
+  changeOrderFolder (dragFolderKey, targetFolderKey, folders) {
+    const dragFolderIndex = this.getFolderIndex(folders, dragFolderKey)
+    const targetFolderIndex = this.getFolderIndex(folders, targetFolderKey)
+    this.moveFolderElements(folders, dragFolderIndex, targetFolderIndex)
+  }
+
+  getFolderIndex (folders, targetFolderKey) {
+    const folderIndex = folders.indexOf(_.find(folders, {key: targetFolderKey}))
+    return folderIndex
+  }
+
+  moveFolderElements (folders, dragFolderIndex, targetFolderIndex) {
+    const oldFolders = folders
+    folders.splice(targetFolderIndex, 0, oldFolders[dragFolderIndex])
+    folders.splice(dragFolderIndex + ((dragFolderIndex > targetFolderIndex) ? 1 : 0), 1)
+  }
+
   render () {
-    let { storage, location, isFolded, data } = this.props
+    let { storage, location, isFolded, data, dispatch } = this.props
     let { folderNoteMap } = data
     let folderList = storage.folders.map((folder) => {
       let isActive = !!(location.pathname.match(new RegExp('\/storages\/' + storage.key + '\/folders\/' + folder.key)))
@@ -151,6 +185,8 @@ class StorageItem extends React.Component {
           folderColor={folder.color}
           isFolded={isFolded}
           noteCount={noteCount}
+          handleDragStart={(e) => this.handleDragStart(e, folder)}
+          handleDrop={(e) => this.handleDrop(e, folder, storage, dispatch)}
         />
       )
     })
