@@ -30,7 +30,7 @@ const StorageItem = ({
     onContextMenu={handleContextMenu}
     onDragStart={handleDragStart}
     onDrop={handleDrop}
-    draggable="true"
+    draggable='true'
   >
     <span styleName={isFolded
       ? 'folderList-item-name--folded' : 'folderList-item-name'
