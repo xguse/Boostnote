@@ -209,9 +209,10 @@ class InitModal extends React.Component {
         <div styleName='header'>
           <div styleName='header-title'>Initialize Storage</div>
         </div>
-        <button styleName='closeButton'
-          onClick={(e) => this.handleCloseButtonClick(e)}
-        >Close</button>
+        <button styleName='closeButton' onClick={(e) => this.handleCloseButtonClick(e)}>
+          <div styleName='close-mark'>X</div>
+          <div styleName='close-text'>esc</div>
+        </button>
         <div styleName='body'>
           <div styleName='body-welcome'>
             Welcome you!
