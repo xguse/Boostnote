@@ -140,28 +140,27 @@ class StorageItem extends React.Component {
 
   handleDrop (e, folder, storage, dispatch) {
     const dragFolderKey = e.dataTransfer.getData('dragFolderKey')
-    this.changeOrderFolder(dragFolderKey, folder.key, storage.folders)
-    CSON.writeFileSync(path.join(storage.path, 'boostnote.json'), _.pick(storage, ['folders', 'version']))
+    this.rearrangeFolder (dragFolderKey, folder.key, storage.folders)
+    dataApi
+      .moveFolder(storage.key, storage.folders)
     dispatch({
       type: 'UPDATE_FOLDER',
       storage: storage
     })
   }
 
-  changeOrderFolder (dragFolderKey, targetFolderKey, folders) {
+  rearrangeFolder (dragFolderKey, targetFolderKey, folders) {
     const dragFolderIndex = this.getFolderIndex(folders, dragFolderKey)
     const targetFolderIndex = this.getFolderIndex(folders, targetFolderKey)
     this.moveFolderElements(folders, dragFolderIndex, targetFolderIndex)
   }
 
   getFolderIndex (folders, targetFolderKey) {
-    const folderIndex = folders.indexOf(_.find(folders, {key: targetFolderKey}))
-    return folderIndex
+    return folders.indexOf(_.find(folders, {key: targetFolderKey}))
   }
 
   moveFolderElements (folders, dragFolderIndex, targetFolderIndex) {
-    const oldFolders = folders
-    folders.splice(targetFolderIndex, 0, oldFolders[dragFolderIndex])
+    folders.splice(targetFolderIndex, 0, folders[dragFolderIndex])
     folders.splice(dragFolderIndex + ((dragFolderIndex > targetFolderIndex) ? 1 : 0), 1)
   }
 
