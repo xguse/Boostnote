@@ -140,7 +140,7 @@ class StorageItem extends React.Component {
 
   handleDrop (e, folder, storage, dispatch) {
     const dragFolderKey = e.dataTransfer.getData('dragFolderKey')
-    this.rearrangeFolder (dragFolderKey, folder.key, storage.folders)
+    this.rearrangeFolder(dragFolderKey, folder.key, storage.folders)
     dataApi
       .moveFolder(storage.key, storage.folders)
     dispatch({
