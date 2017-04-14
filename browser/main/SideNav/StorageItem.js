@@ -161,7 +161,8 @@ class StorageItem extends React.Component {
 
   moveFolderElements (folders, dragFolderIndex, targetFolderIndex) {
     folders.splice(targetFolderIndex, 0, folders[dragFolderIndex])
-    folders.splice(dragFolderIndex + ((dragFolderIndex > targetFolderIndex) ? 1 : 0), 1)
+    const deleteIndex = (dragFolderIndex > targetFolderIndex) ? 1 : 0
+    folders.splice(dragFolderIndex + deleteIndex, 1)
   }
 
   render () {
