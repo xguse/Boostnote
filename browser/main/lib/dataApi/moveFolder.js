@@ -31,7 +31,6 @@ function moveFolder (storageKey, folders) {
           storage.folders = folders
           movedStorage = storage
           CSON.writeFileSync(path.join(storage.path, 'boostnote.json'), _.pick(storage, ['folders', 'version']))
-
         })
       resolve(movedStorage)
     } catch (e) {
