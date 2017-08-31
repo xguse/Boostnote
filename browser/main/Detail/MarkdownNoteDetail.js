@@ -105,7 +105,6 @@ class MarkdownNoteDetail extends React.Component {
           type: 'UPDATE_NOTE',
           note: note
         })
-        AwsMobileAnalyticsConfig.recordDynamicCustomEvent('EDIT_NOTE')
       })
   }
 
