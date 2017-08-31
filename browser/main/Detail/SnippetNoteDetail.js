@@ -105,7 +105,7 @@ class SnippetNoteDetail extends React.Component {
 
     this.sendEventQueue = setTimeout(() => {
       this.sendEditnoteEvent()
-    }, 3000)
+    }, 30000)
 
     this.saveQueue = setTimeout(() => {
       this.saveNow()
